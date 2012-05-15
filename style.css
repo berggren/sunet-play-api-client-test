@@ -1,0 +1,14 @@
+body {
+    background:#efefef;
+}
+.shadow {
+    -moz-box-shadow: 10px 10px 50px #666;
+    -webkit-box-shadow: 10px 10px 50px #666;
+    box-shadow: 10px 10px 50px #666;
+}
+
+#video_container {
+    width: 570px ;
+    margin-left: auto ;
+    margin-right: auto ;
+}

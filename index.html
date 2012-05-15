@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title>SUNET-play random</title>
+        <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+        <script type="text/javascript" src="/play/jwplayer/jwplayer.js"></script>
+        <link href='https://fonts.googleapis.com/css?family=Poiret+One' rel='stylesheet' type='text/css'>
+        <link href="/play/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+        <link href="/play/style.css" rel="stylesheet">
+        <script type='text/javascript'>
+            $(document).ready(function(){
+                var config = {
+                    baseUrl: 'https://play.sunet.se',
+                    apiVersion: 'v1'
+                };
+                jwplayer('player').setup({
+                    'controlbar': 'over',
+                    'width': '640',
+                    'height': '360',
+                    'autostart':true,
+                    'skin': '/play/jwplayer/jwplayer-skin-glow/glow.zip',
+                    'modes': [
+                        {type: 'html5'},
+                        {type: 'flash', src: '/play/jwplayer/player.swf'},
+                        {type: 'download'}]
+                });
+                function randomVideo(){
+                    $.getJSON(config.baseUrl + '/api/' + config.apiVersion + '/publicvideo?format=jsonp&callback=?', function(data){
+                        var videos = (data.objects);
+                        var video = videos[Math.floor(Math.random() * videos.length)];
+                        $.getJSON(config.baseUrl + video.playurl + '?format=jsonp&callback=?', function(data) {
+                            var playurl = data.playurls[0].url;
+                            jwplayer().load({file: playurl});
+                            $("#title").text(video.title)
+                        });
+                    });
+                }
+                // Play on first load
+                randomVideo();
+                // Play new video when button is pressed
+                $('#random_btn').click(function(){
+                    randomVideo();
+                });
+            });
+        </script>
+    </head>
+    <body>
+        <div class="container-fluid">
+            <div style="text-align: center;margin-top:100px;">
+                <h1 id="title" style="font-family: 'Poiret One', cursive;font-size:3em;color:#666;"></h1>
+                <br><br>
+                <div id="video_container" class="shadow" style="width:640px;height:360px;">
+                    <div id="player"></div>
+                </div>
+                <br><br><br>
+                <button id="random_btn" class="btn btn-large"><i class="icon-refresh"></i> Slumpa fram en ny film</button>
+            </div>
+        </div>
+    </body>
+</html>
+
